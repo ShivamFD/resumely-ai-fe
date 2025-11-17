@@ -1,235 +1,119 @@
-# Frontend Documentation — AI Resume Analyzer (React 19 + Vite)
+# AI Resume Analyzer - Frontend
 
-This document outlines the **frontend development plan** for the AI Resume Analyzer web app built using **React 19**, designed for high performance, maintainability, and seamless backend integration.
+This is the frontend for the AI Resume Analyzer application built with React 19, Vite, and Tailwind CSS. It provides an intuitive and interactive interface for users to upload their resumes and receive AI-powered analysis.
 
----
+## 🚀 Features
 
-## 🎯 Objective
+- **Modern UI/UX**: Clean, responsive design following best practices
+- **Drag & Drop Upload**: Intuitive resume upload with drag-and-drop support
+- **Real-time Analysis**: Instant feedback on resume strengths and weaknesses
+- **Professional Results Display**: Structured presentation of AI analysis
+- **File Validation**: Support for PDF, DOC, and DOCX formats (max 5MB)
+- **Progress Tracking**: Visual feedback during upload and analysis
+- **Job Fit Score**: Numerical score with interpretation and recommendations
 
-To build a modern, responsive, and efficient frontend interface for the **AI Resume Analyzer**, where users can:
+## 🛠️ Tech Stack
 
-1. Upload resumes (PDF/DOCX)
-2. View AI analysis (strengths, weaknesses, missing skills)
-3. Experience smooth animations, lazy loading, and fast interactions.
-
----
-
-## 🧩 Tech Stack
-
-* **Framework:** React 19 (Vite)
-* **Routing:** React Router DOM
-* **State Management:** Zustand + React Query
-* **Animations:** Framer Motion
-* **Notifications:** React Toastify
-* **Icons:** React Icons
-* **HTTP Client:** Axios
-* **Performance Tools:** Lazy Loading, Skeleton Loaders, Code Splitting
-
----
+- **Framework**: React 19 with Vite
+- **Styling**: Tailwind CSS
+- **Routing**: React Router DOM
+- **HTTP Client**: Axios
+- **File Upload**: React Dropzone
+- **Icons**: SVG Icons
 
 ## 📁 Folder Structure
 
-```bash
-frontend/
-├── src/
-│   ├── components/
-│   │   ├── UploadForm.jsx
-│   │   ├── AnalysisResult.jsx
-│   │   ├── SkeletonLoader.jsx
-│   │   └── Navbar.jsx
-│   ├── pages/
-│   │   ├── Home.jsx
-│   │   ├── Upload.jsx
-│   │   └── Result.jsx
-│   ├── hooks/
-│   │   ├── useUpload.js
-│   │   └── useAnalysis.js
-│   ├── context/
-│   │   └── store.js
-│   ├── services/
-│   │   └── api.js
-│   ├── utils/
-│   │   └── constants.js
-│   ├── App.jsx
-│   └── main.jsx
-└── vite.config.js
+```
+src/
+├── components/          # Reusable UI components
+│   ├── UploadForm.jsx
+│   ├── AnalysisResult.jsx
+│   ├── Navbar.jsx
+│   └── ...
+├── pages/              # Route-based pages
+│   ├── Home.jsx
+│   ├── Upload.jsx
+│   └── Result.jsx
+├── services/           # API services
+│   └── api.js
+├── hooks/             # Custom hooks
+├── utils/             # Utility functions
+└── assets/            # Static assets
 ```
 
----
+## 🔧 Environment Variables
 
-## ⚙️ Setup Instructions
+Create a `.env` file in the root directory:
 
-### 1️⃣ Initialize Project
+```env
+VITE_API_URL=http://localhost:8080/api
+```
 
+## 📦 Installation
+
+1. **Install dependencies**:
 ```bash
-npm create vite@latest ai-resume-analyzer-frontend --template react
-cd ai-resume-analyzer-frontend
 npm install
 ```
 
-### 2️⃣ Install Dependencies
-
+2. **Start development server**:
 ```bash
-npm install react-router-dom axios framer-motion react-toastify react-query zustand react-icons
-npm install -D eslint prettier vite-plugin-compression
+npm run dev
 ```
 
-### 3️⃣ Setup Environment File
+The application will be available at `http://localhost:5173`
 
-Create `.env` file in root:
+## 🚦 API Integration
 
-```bash
-VITE_API_URL=https://your-backend-url.onrender.com
-```
+The frontend connects to the backend API at `/api/upload` for resume analysis. The following endpoints are used:
 
----
+- `POST /api/upload` - Upload resume and get AI analysis
+- `GET /api/analytics` - Get system analytics (if needed)
 
-## 🎨 UI/UX Flow
+## 🎨 UI Components
 
-### **Home Page**
+### Upload Form
+- Drag and drop interface
+- File validation and preview
+- Upload progress tracking
+- Error handling and feedback
 
-* Introduction section with animated hero (Framer Motion)
-* CTA button → “Upload Resume”
+### Analysis Results
+- Job Fit Score visualization
+- Strengths and weakness sections
+- Missing skills identification
+- Professional summary
+- Personalized recommendations
 
-### **Upload Page**
+### Navigation
+- Responsive navbar with mobile support
+- Clear navigation between pages
+- Consistent design language
 
-* File input with drag-and-drop zone
-* On submit → call `/api/upload` (backend)
-* Show skeleton loader while waiting for AI analysis
+## 📱 Responsive Design
 
-### **Result Page**
-
-* Display structured feedback (strengths, weaknesses, missing skills)
-* Animated appearance using Framer Motion
-* Option to “Upload Another Resume”
-
-### **Global Components**
-
-* Navbar (fixed top)
-* Toast notifications (React Toastify)
-* Reusable Button & Card components
-
----
-
-## 🧠 State Management
-
-### **Zustand Store Example:** `store.js`
-
-```js
-import { create } from 'zustand';
-
-export const useAppStore = create((set) => ({
-  analysisData: null,
-  setAnalysisData: (data) => set({ analysisData: data }),
-  resetData: () => set({ analysisData: null }),
-}));
-```
-
-### **React Query Integration:**
-
-Used for API calls + caching analysis results.
-
-```js
-import { useMutation } from 'react-query';
-import axios from 'axios';
-
-export const useAnalyzeResume = () => {
-  return useMutation(async (formData) => {
-    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, formData);
-    return res.data;
-  });
-};
-```
-
----
-
-## 💡 Performance Optimizations
-
-* **Lazy Loading**: `React.lazy()` + `Suspense` for pages not in initial viewport.
-* **Skeleton Loader**: Only for visible area during data fetching.
-* **Framer Motion**: Animate route transitions + results.
-* **React Query**: Caching results to avoid redundant API calls.
-* **Code Splitting**: Auto handled by Vite for faster builds.
-
----
-
-## 🧱 7-Day Frontend Roadmap
-
-### **Day 1 — Setup & Config**
-
-* Initialize Vite + React project
-* Configure routing, linting, environment variables
-
-### **Day 2 — Layout + Navigation**
-
-* Create Navbar, Layout, basic routes (Home, Upload, Result)
-* Setup Framer Motion for transitions
-
-### **Day 3 — Upload Flow + API Integration**
-
-* Create upload form + axios service
-* Connect backend `/api/upload`
-* Display loader during analysis
-
-### **Day 4 — Result Page + Zustand Integration**
-
-* Display AI feedback in cards
-* Add Zustand for storing analyzed data
-
-### **Day 5 — Skeletons + Lazy Loading + Toasts**
-
-* Add skeleton loader for visible area
-* Lazy load Result and Upload pages
-* Add success/error toasts
-
-### **Day 6 — UI Enhancements + Responsive Design**
-
-* Polish design using modern card layout
-* Test responsiveness (mobile, tablet, desktop)
-* Optimize animations
-
-### **Day 7 — Deployment + Cleanup**
-
-* Optimize build with Vite compression
-* Deploy to Netlify/Vercel
-* Final testing + documentation update
-
----
-
-## 🧩 Key Dependencies Overview
-
-| Category      | Package                 | Purpose                 |
-| ------------- | ----------------------- | ----------------------- |
-| Routing       | react-router-dom        | Manage app routes       |
-| API           | axios                   | Backend communication   |
-| Animation     | framer-motion           | Smooth transitions      |
-| Notifications | react-toastify          | User feedback           |
-| State         | zustand                 | Global state management |
-| Data fetching | react-query             | API caching + retry     |
-| Icons         | react-icons             | Visual icons            |
-| Performance   | vite-plugin-compression | Optimize build size     |
-
----
+The application is fully responsive and works on:
+- Mobile devices (320px+)
+- Tablets (768px+)
+- Desktops (1024px+)
+- Large screens (1200px+)
 
 ## 🚀 Deployment
 
-* **Platform:** Vercel or Netlify
-* **Build Command:** `npm run build`
-* **Publish Directory:** `dist`
-* **Env Variables:**
+Build for production:
+```bash
+npm run build
+```
 
-  * `VITE_API_URL` → Backend deployed URL
+The production build will be created in the `dist` folder.
 
----
+## 🤝 Contributing
 
-## 🔮 Future Enhancements
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-* Dark/Light theme toggle
-* User authentication (save history)
-* PDF export of AI analysis
-* Shareable result link
-* Custom prompts based on job role
+## 📄 License
 
----
-
-**Outcome:** A modern, responsive, and production-ready frontend integrated with the AI-powered backend, featuring optimized performance, smooth animations, and scalable architecture.
+This project is licensed under the MIT License.
