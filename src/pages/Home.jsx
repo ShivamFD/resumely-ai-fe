@@ -1,34 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AnimatedHero from '../components/AnimatedHero';
 import UploadForm from '../components/UploadForm';
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            AI-Powered <span className="text-blue-600">Resume Analyzer</span>
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-10">
-            Get instant, professional feedback on your resume. Our AI analyzes strengths, weaknesses,
-            and missing skills to help you land your dream job.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <AnimatedHero />
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              to="/upload"
-              className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-            >
-              Analyze Your Resume
-            </Link>
-            <button className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl border-2 border-blue-600 hover:bg-blue-50 transition-colors duration-300 shadow-lg hover:shadow-xl">
-              How It Works
-            </button>
-          </div>
-        </div>
-
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Features Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow duration-300">
