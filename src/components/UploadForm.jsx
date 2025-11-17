@@ -33,6 +33,12 @@ const UploadForm = ({ onUploadSuccess, onUploadError }) => {
       return;
     }
 
+    // File validation
+    if (file.size === 0) {
+      toast.error('Cannot upload an empty file. Please select a valid resume.');
+      return;
+    }
+
     setIsUploading(true);
     setUploadProgress(0);
 
@@ -40,15 +46,36 @@ const UploadForm = ({ onUploadSuccess, onUploadError }) => {
     toast.info('Starting resume analysis...');
 
     try {
-      const response = await api.uploadResume(file, (progress) => {
+      const response = await api.uploadResumeFresh(file, (progress) => {
         setUploadProgress(progress);
       });
 
-      toast.success('Resume analysis completed successfully!');
-      onUploadSuccess(response.data);
+      // Check if the response has valid analysis data
+      const { strengths, weaknesses, missingSkills, summary, jobFitScore } = response.data || {};
+
+      // Log response for debugging
+      console.log('Analysis response received:', response.data);
+
+      if (response.data?.error) {
+        // If there's an error in the response data, treat as error
+        toast.error(response.data.error);
+        onUploadError(response.data.error);
+      } else if ((!strengths || strengths.length === 0) &&
+                 (!weaknesses || weaknesses.length === 0) &&
+                 (!missingSkills || missingSkills.length === 0) &&
+                 (!summary || summary.trim() === '') &&
+                 (typeof jobFitScore !== 'number' || jobFitScore === 0)) {
+        // If all the key fields are empty/missing, warn the user
+        toast.warn('Analysis returned limited results. Your resume may have formatting issues or the AI service is temporarily unavailable.');
+        onUploadSuccess(response.data);
+      } else {
+        // Valid response with proper data
+        toast.success('Resume analysis completed successfully!');
+        onUploadSuccess(response.data);
+      }
     } catch (error) {
       console.error('Upload error:', error);
-      const errorMessage = error?.response?.data?.error || 'Upload failed. Please try again.';
+      const errorMessage = error?.response?.data?.error || error?.message || 'Upload failed. Please try again.';
       toast.error(errorMessage);
       onUploadError(errorMessage);
     } finally {
